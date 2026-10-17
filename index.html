@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>نموذج موافقة - مديرية الشؤون الصحية بالإسكندرية</title>
-    <!-- استخدام محرك كيو آر ديناميكي مستقل ومباشر -->
-    <script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js"></script>
+    <!-- مكتبة QR خفيفة وسريعة جداً مع تضمين تلقائي -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap');
         
@@ -16,14 +16,14 @@
         body {
             background-color: #f4f6f9;
             margin: 0;
-            padding: 20px;
+            padding: 15px;
             color: #333;
         }
         .container {
             max-width: 800px;
             margin: 0 auto;
             background: #fff;
-            padding: 25px;
+            padding: 20px;
             border-radius: 8px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
@@ -38,32 +38,33 @@
         .header-title h2 {
             margin: 0;
             color: #2e7d32;
-            font-size: 20px;
+            font-size: 18px;
         }
         .header-title h4 {
             margin: 5px 0 0 0;
             color: #555;
-            font-size: 14px;
+            font-size: 13px;
         }
         .qr-box {
             width: 110px;
             height: 110px;
             border: 2px solid #2e7d32;
-            padding: 4px;
+            padding: 3px;
             display: flex;
             align-items: center;
             justify-content: center;
             background: #fff;
             border-radius: 6px;
         }
-        .qr-box canvas {
-            width: 100% !important;
-            height: 100% !important;
+        .qr-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
         }
         .form-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 15px;
+            gap: 12px;
             margin-bottom: 20px;
         }
         .form-group {
@@ -75,15 +76,16 @@
         }
         label {
             font-weight: 600;
-            margin-bottom: 5px;
-            font-size: 13px;
+            margin-bottom: 4px;
+            font-size: 12px;
             color: #2e7d32;
         }
-        input, select {
+        input {
             padding: 8px 10px;
             border: 1px solid #ccc;
             border-radius: 4px;
-            font-size: 14px;
+            font-size: 13px;
+            width: 100%;
         }
         .read-only-box {
             background-color: #e8f5e9;
@@ -100,10 +102,7 @@
             border-radius: 5px;
             cursor: pointer;
             width: 100%;
-            margin-top: 15px;
-        }
-        .btn-print:hover {
-            background: #1b5e20;
+            margin-top: 10px;
         }
         @media print {
             body { background: #fff; padding: 0; }
@@ -121,33 +120,30 @@
             <h2>مديرية الشؤون الصحية بالإسكندرية</h2>
             <h4>وحدة التخلص الآمن - نموذج موافقة بيئية موحد</h4>
         </div>
-        <!-- عنصر الـ Canvas المباشر للـ QR -->
-        <div class="qr-box">
-            <canvas id="qrCanvas"></canvas>
-        </div>
+        <div class="qr-box" id="qrContainer"></div>
     </div>
 
     <form id="approvalForm">
         <div class="form-grid">
             <div class="form-group">
                 <label>اسم المنشأة الطبية:</label>
-                <input type="text" id="facilityName" placeholder="أدخل اسم المنشأة" onkeyup="updateQR()">
+                <input type="text" id="facilityName" placeholder="أدخل اسم المنشأة" oninput="renderQR()">
             </div>
             <div class="form-group">
                 <label>التخصص / النشاط:</label>
-                <input type="text" id="activityType" placeholder="مثال: عيادة خاصة / مركز طبي" onkeyup="updateQR()">
+                <input type="text" id="activityType" placeholder="مثال: عيادة خاصة / مركز طبي" oninput="renderQR()">
             </div>
             <div class="form-group">
                 <label>اسم المدير الفني / المسؤول:</label>
-                <input type="text" id="managerName" placeholder="أدخل الاسم الثلاثي/الرباعي" onkeyup="updateQR()">
+                <input type="text" id="managerName" placeholder="أدخل الاسم الثلاثي/الرباعي" oninput="renderQR()">
             </div>
             <div class="form-group">
                 <label>الرقم القومي للمسؤول:</label>
-                <input type="text" id="nationalId" maxlength="14" placeholder="14 رقم" onkeyup="updateQR()">
+                <input type="text" id="nationalId" maxlength="14" placeholder="14 رقم" oninput="renderQR()">
             </div>
             <div class="form-group full">
                 <label>العنوان التفصيلي للمنشأة:</label>
-                <input type="text" id="address" placeholder="المحافظة - المركز/المدينة - الشارع - رقم العقار" onkeyup="updateQR()">
+                <input type="text" id="address" placeholder="المحافظة - المركز/المدينة - الشارع - رقم العقار" oninput="renderQR()">
             </div>
             <div class="form-group">
                 <label>تاريخ المعاينة والمعالجة:</label>
@@ -164,23 +160,14 @@
 </div>
 
 <script>
-    let qr;
-
-    function initQR() {
-        if (typeof QRious !== 'undefined') {
-            qr = new QRious({
-                element: document.getElementById('qrCanvas'),
-                size: 200,
-                level: 'H'
-            });
-            updateQR();
-        } else {
-            // في حالة انقطاع الإنترنت التام يتولد كود احتياطي مباشر
-            setTimeout(initQR, 500);
-        }
+    function drawFallbackQR(text) {
+        // توليد QR عبر خدمة تحويل مباشرة وموثوقة كصورة
+        const encodedText = encodeURIComponent(text);
+        const imgUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodedText}`;
+        document.getElementById('qrContainer').innerHTML = `<img src="${imgUrl}" alt="QR Code">`;
     }
 
-    function updateQR() {
+    function renderQR() {
         const facility = document.getElementById('facilityName').value || 'منشأة بيئية';
         const manager = document.getElementById('managerName').value || 'غير محدد';
         const code = document.getElementById('trackingCode').value;
@@ -188,12 +175,21 @@
 
         const qrText = `مديرية الشؤون الصحية بالإسكندرية\nكود التتبع: ${code}\nالمنشأة: ${facility}\nالمسؤول: ${manager}\nتاريخ التوثيق: ${date}\nالحالة: موافقة معتمدة رسمياً`;
 
-        if (qr) {
-            qr.value = qrText;
+        try {
+            if (typeof qrcode !== 'undefined') {
+                const qr = qrcode(0, 'M');
+                qr.addData(qrText);
+                qr.make();
+                document.getElementById('qrContainer').innerHTML = qr.createImgTag(4);
+            } else {
+                drawFallbackQR(qrText);
+            }
+        } catch (e) {
+            drawFallbackQR(qrText);
         }
     }
 
-    window.onload = initQR;
+    window.onload = renderQR;
 </script>
 
 </body>
