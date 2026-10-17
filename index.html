@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نموذج موافقة بيئية موحد - مديرية الشؤون الصحية بالإسكندرية</title>
-    <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
+    <title>نموذج موافقة - مديرية الشؤون الصحية بالإسكندرية</title>
+    <!-- استخدام محرك كيو آر ديناميكي مستقل ومباشر -->
+    <script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap');
         
         * {
             box-sizing: border-box;
@@ -15,25 +16,24 @@
         body {
             background-color: #f4f6f9;
             margin: 0;
-            padding: 15px;
-            color: #222;
+            padding: 20px;
+            color: #333;
         }
         .container {
-            max-width: 850px;
+            max-width: 800px;
             margin: 0 auto;
             background: #fff;
             padding: 25px;
             border-radius: 8px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            border: 1px solid #ddd;
         }
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             border-bottom: 2px solid #2e7d32;
-            padding-bottom: 12px;
-            margin-bottom: 15px;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
         }
         .header-title h2 {
             margin: 0;
@@ -42,53 +42,29 @@
         }
         .header-title h4 {
             margin: 5px 0 0 0;
-            color: #444;
+            color: #555;
             font-size: 14px;
         }
         .qr-box {
             width: 110px;
             height: 110px;
             border: 2px solid #2e7d32;
-            padding: 3px;
+            padding: 4px;
             display: flex;
             align-items: center;
             justify-content: center;
             background: #fff;
             border-radius: 6px;
         }
-        .qr-box img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-        }
-
-        /* عنوان الموافقة الرئيسي */
-        .main-approval-title {
-            text-align: center;
-            font-size: 24px;
-            font-weight: 800;
-            color: #1b5e20;
-            background-color: #e8f5e9;
-            padding: 10px;
-            border-radius: 6px;
-            border: 1px solid #a5d6a7;
-            margin: 15px 0 20px 0;
-            letter-spacing: 0.5px;
-        }
-
-        .section-title {
-            background-color: #f1f8e9;
-            color: #1b5e20;
-            padding: 6px 12px;
-            font-weight: bold;
-            font-size: 14px;
-            border-right: 4px solid #2e7d32;
-            margin: 15px 0 10px 0;
+        .qr-box canvas {
+            width: 100% !important;
+            height: 100% !important;
         }
         .form-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 10px;
+            gap: 15px;
+            margin-bottom: 20px;
         }
         .form-group {
             display: flex;
@@ -99,77 +75,21 @@
         }
         label {
             font-weight: 600;
-            margin-bottom: 3px;
-            font-size: 12px;
+            margin-bottom: 5px;
+            font-size: 13px;
             color: #2e7d32;
         }
-        input, select, textarea {
-            padding: 6px 8px;
+        input, select {
+            padding: 8px 10px;
             border: 1px solid #ccc;
             border-radius: 4px;
-            font-size: 13px;
-            width: 100%;
+            font-size: 14px;
         }
         .read-only-box {
             background-color: #e8f5e9;
             border: 1px solid #a5d6a7;
             font-weight: bold;
-            color: #1b5e20;
         }
-        
-        .conditions-list {
-            font-size: 12px;
-            line-height: 1.6;
-            padding-right: 20px;
-            margin: 5px 0;
-        }
-        .conditions-list li {
-            margin-bottom: 4px;
-        }
-
-        /* التوقيعات والاعتماد */
-        .signatures-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 15px;
-            margin-top: 20px;
-            text-align: center;
-        }
-        .sig-box {
-            border: 1px dashed #aaa;
-            padding: 10px;
-            border-radius: 6px;
-            background: #fafafa;
-            min-height: 120px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-        .sig-title {
-            font-weight: bold;
-            font-size: 14px;
-            color: #1b5e20;
-        }
-        .sig-space {
-            height: 35px;
-        }
-        .stamp-box {
-            border: 2px solid #2e7d32;
-            border-style: double;
-            border-radius: 50%;
-            width: 85px;
-            height: 85px;
-            margin: 5px auto;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #2e7d32;
-            font-size: 11px;
-            font-weight: bold;
-            text-align: center;
-            background: #f9fbe7;
-        }
-
         .btn-print {
             background: #2e7d32;
             color: #fff;
@@ -180,120 +100,87 @@
             border-radius: 5px;
             cursor: pointer;
             width: 100%;
-            margin-top: 20px;
+            margin-top: 15px;
         }
-
+        .btn-print:hover {
+            background: #1b5e20;
+        }
         @media print {
             body { background: #fff; padding: 0; }
-            .container { box-shadow: none; border: none; width: 100%; max-width: 100%; padding: 0; }
+            .container { box-shadow: none; border: none; width: 100%; max-width: 100%; }
             .btn-print { display: none; }
-            input, select, textarea { border: none; border-bottom: 1px dashed #666; border-radius: 0; background: transparent; }
-            .read-only-box { background: transparent; border: none; border-bottom: 1px dashed #666; }
-            .sig-box { border: 1px solid #ccc; }
+            input { border: none; border-bottom: 1px dashed #666; border-radius: 0; background: transparent; }
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <!-- الهيدر والـ QR -->
     <div class="header">
         <div class="header-title">
             <h2>مديرية الشؤون الصحية بالإسكندرية</h2>
-            <h4>إدارة الفحص والترخيص - وحدة التخلص الآمن</h4>
+            <h4>وحدة التخلص الآمن - نموذج موافقة بيئية موحد</h4>
         </div>
-        <div class="qr-box" id="qrContainer"></div>
-    </div>
-
-    <!-- العنوان الرئيسي في منتصف الصفحة -->
-    <div class="main-approval-title">
-        نموذج موافقة بيئية موحد
+        <!-- عنصر الـ Canvas المباشر للـ QR -->
+        <div class="qr-box">
+            <canvas id="qrCanvas"></canvas>
+        </div>
     </div>
 
     <form id="approvalForm">
-        <!-- بيانات المنشأة -->
-        <div class="section-title">أولاً: البيانات الأساسية للمنشأة والمسؤول</div>
         <div class="form-grid">
             <div class="form-group">
-                <label>اسم المنشأة الطبية / العيادة:</label>
-                <input type="text" id="facilityName" placeholder="أدخل اسم المنشأة" oninput="renderQR()">
+                <label>اسم المنشأة الطبية:</label>
+                <input type="text" id="facilityName" placeholder="أدخل اسم المنشأة" onkeyup="updateQR()">
             </div>
             <div class="form-group">
-                <label>التخصص / طبيعة النشاط:</label>
-                <input type="text" id="activityType" placeholder="مثال: عيادة خاصة / مركز طب وجراحة" oninput="renderQR()">
+                <label>التخصص / النشاط:</label>
+                <input type="text" id="activityType" placeholder="مثال: عيادة خاصة / مركز طبي" onkeyup="updateQR()">
             </div>
             <div class="form-group">
-                <label>اسم المدير الفني / الطبيب المسؤول:</label>
-                <input type="text" id="managerName" placeholder="أدخل الاسم الرباعي" oninput="renderQR()">
+                <label>اسم المدير الفني / المسؤول:</label>
+                <input type="text" id="managerName" placeholder="أدخل الاسم الثلاثي/الرباعي" onkeyup="updateQR()">
             </div>
             <div class="form-group">
-                <label>الرقم القومي للمسؤول (14 رقم):</label>
-                <input type="text" id="nationalId" maxlength="14" placeholder="أدخل الرقم القومي" oninput="renderQR()">
+                <label>الرقم القومي للمسؤول:</label>
+                <input type="text" id="nationalId" maxlength="14" placeholder="14 رقم" onkeyup="updateQR()">
             </div>
             <div class="form-group full">
                 <label>العنوان التفصيلي للمنشأة:</label>
-                <input type="text" id="address" placeholder="المحافظة - الحي/المركز - الشارع - رقم العقار - الدور" oninput="renderQR()">
+                <input type="text" id="address" placeholder="المحافظة - المركز/المدينة - الشارع - رقم العقار" onkeyup="updateQR()">
             </div>
             <div class="form-group">
-                <label>تاريخ المعاينة والاعتماد:</label>
+                <label>تاريخ المعاينة والمعالجة:</label>
                 <input type="text" id="date" class="read-only-box" value="17 أكتوبر 2026" readonly>
             </div>
             <div class="form-group">
-                <label>رقم كود التتبع البيئي الموحد:</label>
+                <label>رقم كود التتبع البيئي:</label>
                 <input type="text" id="trackingCode" class="read-only-box" value="ENV-885978" readonly>
             </div>
         </div>
 
-        <!-- الاشتراطات البيئية والصحية -->
-        <div class="section-title">ثانياً: الاشتراطات البيئية والتنظيمية الواجب اتباعها (طبقا للقرار 518 لسنة 2023)</div>
-        <ol class="conditions-list">
-            <li>الالتزام بالتعاقد الساري مع جهة معتمدة للتخلص الآمن من النفايات الطبية الخطرة.</li>
-            <li>توفير حاويات وأكياس حمراء وصفراء سميكة ومطابقة للمواصفات القياسية داخل كافة الغرف والعيادات.</li>
-            <li>تخصيص غرفة/مكان آمن ومغلق للتجميع المؤقت للنفايات الخطرة لحين تسليمها لسيارة التجميع.</li>
-            <li>توفير وسائل الحماية الشخصية (PPE) للعمال والقائمين على تداول النفايات داخل المنشأة.</li>
-            <li>الالتزام بالفصل التام بين النفايات العادية (الصلبة) والنفايات الطبية الخطرة من المصدر.</li>
-        </ol>
-
-        <!-- نتيجة المعاينة الميدانية -->
-        <div class="section-title">ثالثاً: نتيجة المعاينة الميدانية والقرار الفني</div>
-        <div class="form-group full">
-            <label>حالة الاستيفاء البيئي:</label>
-            <input type="text" id="status" class="read-only-box" value="مستوفي للاشتراطات البيئية" readonly>
-        </div>
-
-        <!-- التوقيعات والاعتماد -->
-        <div class="section-title">رابعاً: الاعتماد والتوقيعات الرسمية</div>
-        <div class="signatures-grid">
-            <div class="sig-box">
-                <div class="sig-title">مراقب الوحدة</div>
-                <div class="sig-space"></div>
-                <div style="font-size: 11px;">الاسم: ........................</div>
-            </div>
-            <div class="sig-box">
-                <div class="sig-title">يعتمد</div>
-                <div class="stamp-box">
-                    خاتم الاعتماد<br>الرسمي
-                </div>
-            </div>
-            <div class="sig-box">
-                <div class="sig-title">مدير وحدة التخلص الآمن</div>
-                <div class="sig-space"></div>
-                <div style="font-size: 11px;">الاسم: ........................</div>
-            </div>
-        </div>
-
-        <button type="button" class="btn-print" onclick="window.print()">🖨️ طباعة نموذج الموافقة الموحد</button>
+        <button type="button" class="btn-print" onclick="window.print()">🖨️ طباعة الموافقة</button>
     </form>
 </div>
 
 <script>
-    function drawFallbackQR(text) {
-        const encodedText = encodeURIComponent(text);
-        const imgUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodedText}`;
-        document.getElementById('qrContainer').innerHTML = `<img src="${imgUrl}" alt="QR Code">`;
+    let qr;
+
+    function initQR() {
+        if (typeof QRious !== 'undefined') {
+            qr = new QRious({
+                element: document.getElementById('qrCanvas'),
+                size: 200,
+                level: 'H'
+            });
+            updateQR();
+        } else {
+            // في حالة انقطاع الإنترنت التام يتولد كود احتياطي مباشر
+            setTimeout(initQR, 500);
+        }
     }
 
-    function renderQR() {
+    function updateQR() {
         const facility = document.getElementById('facilityName').value || 'منشأة بيئية';
         const manager = document.getElementById('managerName').value || 'غير محدد';
         const code = document.getElementById('trackingCode').value;
@@ -301,21 +188,12 @@
 
         const qrText = `مديرية الشؤون الصحية بالإسكندرية\nكود التتبع: ${code}\nالمنشأة: ${facility}\nالمسؤول: ${manager}\nتاريخ التوثيق: ${date}\nالحالة: موافقة معتمدة رسمياً`;
 
-        try {
-            if (typeof qrcode !== 'undefined') {
-                const qr = qrcode(0, 'M');
-                qr.addData(qrText);
-                qr.make();
-                document.getElementById('qrContainer').innerHTML = qr.createImgTag(4);
-            } else {
-                drawFallbackQR(qrText);
-            }
-        } catch (e) {
-            drawFallbackQR(qrText);
+        if (qr) {
+            qr.value = qrText;
         }
     }
 
-    window.onload = renderQR;
+    window.onload = initQR;
 </script>
 
 </body>
