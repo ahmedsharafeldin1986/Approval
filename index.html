@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>نموذج موافقة - مديرية الشؤون الصحية بالإسكندرية</title>
-    <!-- مكتبة QR Code سريعة وموثوقة -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <!-- استخدام محرك كيو آر ديناميكي مستقل ومباشر -->
+    <script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap');
         
@@ -48,17 +48,17 @@
         .qr-box {
             width: 110px;
             height: 110px;
-            border: 1px solid #ccc;
-            padding: 5px;
+            border: 2px solid #2e7d32;
+            padding: 4px;
             display: flex;
             align-items: center;
             justify-content: center;
             background: #fff;
-            border-radius: 5px;
+            border-radius: 6px;
         }
-        .qr-box img, .qr-box canvas {
-            max-width: 100%;
-            max-height: 100%;
+        .qr-box canvas {
+            width: 100% !important;
+            height: 100% !important;
         }
         .form-grid {
             display: grid;
@@ -121,31 +121,33 @@
             <h2>مديرية الشؤون الصحية بالإسكندرية</h2>
             <h4>وحدة التخلص الآمن - نموذج موافقة بيئية موحد</h4>
         </div>
-        <!-- مربع الـ QR Code المتغير -->
-        <div class="qr-box" id="qrcode"></div>
+        <!-- عنصر الـ Canvas المباشر للـ QR -->
+        <div class="qr-box">
+            <canvas id="qrCanvas"></canvas>
+        </div>
     </div>
 
     <form id="approvalForm">
         <div class="form-grid">
             <div class="form-group">
                 <label>اسم المنشأة الطبية:</label>
-                <input type="text" id="facilityName" placeholder="أدخل اسم المنشأة" oninput="generateQR()">
+                <input type="text" id="facilityName" placeholder="أدخل اسم المنشأة" onkeyup="updateQR()">
             </div>
             <div class="form-group">
                 <label>التخصص / النشاط:</label>
-                <input type="text" id="activityType" placeholder="مثال: عيادة خاصة / مركز طبي" oninput="generateQR()">
+                <input type="text" id="activityType" placeholder="مثال: عيادة خاصة / مركز طبي" onkeyup="updateQR()">
             </div>
             <div class="form-group">
                 <label>اسم المدير الفني / المسؤول:</label>
-                <input type="text" id="managerName" placeholder="أدخل الاسم الثلاثي/الرباعي" oninput="generateQR()">
+                <input type="text" id="managerName" placeholder="أدخل الاسم الثلاثي/الرباعي" onkeyup="updateQR()">
             </div>
             <div class="form-group">
                 <label>الرقم القومي للمسؤول:</label>
-                <input type="text" id="nationalId" maxlength="14" placeholder="14 رقم" oninput="generateQR()">
+                <input type="text" id="nationalId" maxlength="14" placeholder="14 رقم" onkeyup="updateQR()">
             </div>
             <div class="form-group full">
                 <label>العنوان التفصيلي للمنشأة:</label>
-                <input type="text" id="address" placeholder="المحافظة - المركز/المدينة - الشارع - رقم العقار" oninput="generateQR()">
+                <input type="text" id="address" placeholder="المحافظة - المركز/المدينة - الشارع - رقم العقار" onkeyup="updateQR()">
             </div>
             <div class="form-group">
                 <label>تاريخ المعاينة والمعالجة:</label>
@@ -164,32 +166,34 @@
 <script>
     let qr;
 
-    function generateQR() {
+    function initQR() {
+        if (typeof QRious !== 'undefined') {
+            qr = new QRious({
+                element: document.getElementById('qrCanvas'),
+                size: 200,
+                level: 'H'
+            });
+            updateQR();
+        } else {
+            // في حالة انقطاع الإنترنت التام يتولد كود احتياطي مباشر
+            setTimeout(initQR, 500);
+        }
+    }
+
+    function updateQR() {
         const facility = document.getElementById('facilityName').value || 'منشأة بيئية';
         const manager = document.getElementById('managerName').value || 'غير محدد';
         const code = document.getElementById('trackingCode').value;
         const date = document.getElementById('date').value;
 
-        // نص البيانات المصفر داخل الـ QR لضمان التوثيق
         const qrText = `مديرية الشؤون الصحية بالإسكندرية\nكود التتبع: ${code}\nالمنشأة: ${facility}\nالمسؤول: ${manager}\nتاريخ التوثيق: ${date}\nالحالة: موافقة معتمدة رسمياً`;
 
-        const qrContainer = document.getElementById("qrcode");
-        qrContainer.innerHTML = ""; // تفريغ المربع قبل إعادة الرسم
-
-        qr = new QRCode(qrContainer, {
-            text: qrText,
-            width: 100,
-            height: 100,
-            colorDark : "#000000",
-            colorLight : "#ffffff",
-            correctLevel : QRCode.CorrectLevel.H
-        });
+        if (qr) {
+            qr.value = qrText;
+        }
     }
 
-    // تشغيل الدالة فور تحميل الصفحة
-    window.onload = function() {
-        generateQR();
-    };
+    window.onload = initQR;
 </script>
 
 </body>
