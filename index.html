@@ -62,7 +62,7 @@
             object-fit: contain;
         }
 
-        /* عنوان الموافقة الرئيسي البارز في المنتصف */
+        /* عنوان الموافقة الرئيسي */
         .main-approval-title {
             text-align: center;
             font-size: 24px;
@@ -111,9 +111,10 @@
             width: 100%;
         }
         .read-only-box {
-            background-color: #f1f8e9;
+            background-color: #e8f5e9;
             border: 1px solid #a5d6a7;
             font-weight: bold;
+            color: #1b5e20;
         }
         
         .conditions-list {
@@ -126,11 +127,12 @@
             margin-bottom: 4px;
         }
 
+        /* التوقيعات والاعتماد */
         .signatures-grid {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
             gap: 15px;
-            margin-top: 25px;
+            margin-top: 20px;
             text-align: center;
         }
         .sig-box {
@@ -138,26 +140,26 @@
             padding: 10px;
             border-radius: 6px;
             background: #fafafa;
-            min-height: 110px;
+            min-height: 120px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
         }
         .sig-title {
             font-weight: bold;
-            font-size: 13px;
+            font-size: 14px;
             color: #1b5e20;
         }
         .sig-space {
-            height: 40px;
+            height: 35px;
         }
         .stamp-box {
             border: 2px solid #2e7d32;
             border-style: double;
             border-radius: 50%;
-            width: 100px;
-            height: 100px;
-            margin: 0 auto;
+            width: 85px;
+            height: 85px;
+            margin: 5px auto;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -203,7 +205,7 @@
         <div class="qr-box" id="qrContainer"></div>
     </div>
 
-    <!-- العنوان المكتوب بخط عريض وبحجم أكبر في منتصف الصفحة أسفل وحدة التخلص الآمن -->
+    <!-- العنوان الرئيسي في منتصف الصفحة -->
     <div class="main-approval-title">
         نموذج موافقة بيئية موحد
     </div>
@@ -254,39 +256,29 @@
 
         <!-- نتيجة المعاينة الميدانية -->
         <div class="section-title">ثالثاً: نتيجة المعاينة الميدانية والقرار الفني</div>
-        <div class="form-grid">
-            <div class="form-group">
-                <label>حالة الاستيفاء البيئي:</label>
-                <select id="status">
-                    <option value="مستوفي لكافة الاشتراطات البيئية والصحية">مستوفي لكافة الاشتراطات البيئية</option>
-                    <option value="مستوفي مع إعطاء مهلة للتوفيق">مستوفي مع إعطاء مهلة للتوفيق</option>
-                    <option value="غير مستوفي ومرفوض">غير مستوفي ومرفوض</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>ملاحظات اللجنة الميدانية:</label>
-                <input type="text" id="notes" placeholder="أدخل أي ملاحظات إضافية إن وجدت">
-            </div>
+        <div class="form-group full">
+            <label>حالة الاستيفاء البيئي:</label>
+            <input type="text" id="status" class="read-only-box" value="مستوفي للاشتراطات البيئية" readonly>
         </div>
 
-        <!-- التوقيعات والأختام الرسمية -->
+        <!-- التوقيعات والاعتماد -->
         <div class="section-title">رابعاً: الاعتماد والتوقيعات الرسمية</div>
         <div class="signatures-grid">
             <div class="sig-box">
-                <div class="sig-title">مفتش البيئة / عضو اللجنة</div>
+                <div class="sig-title">مراقب الوحدة</div>
                 <div class="sig-space"></div>
                 <div style="font-size: 11px;">الاسم: ........................</div>
+            </div>
+            <div class="sig-box">
+                <div class="sig-title">يعتمد</div>
+                <div class="stamp-box">
+                    خاتم الاعتماد<br>الرسمي
+                </div>
             </div>
             <div class="sig-box">
                 <div class="sig-title">مدير وحدة التخلص الآمن</div>
                 <div class="sig-space"></div>
                 <div style="font-size: 11px;">الاسم: ........................</div>
-            </div>
-            <div class="sig-box">
-                <div class="sig-title">خاتم الشعار (النسر / الوحدة)</div>
-                <div class="stamp-box">
-                    خاتم الاعتماد<br>الرسمي
-                </div>
             </div>
         </div>
 
