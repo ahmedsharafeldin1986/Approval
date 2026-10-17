@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نموذج موافقة - مديرية الشؤون الصحية بالإسكندرية</title>
-    <!-- مكتبة QR خفيفة وسريعة جداً مع تضمين تلقائي -->
+    <title>نموذج موافقة بيئية موحد - مديرية الشؤون الصحية بالإسكندرية</title>
     <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap');
         
         * {
             box-sizing: border-box;
@@ -17,33 +16,34 @@
             background-color: #f4f6f9;
             margin: 0;
             padding: 15px;
-            color: #333;
+            color: #222;
         }
         .container {
-            max-width: 800px;
+            max-width: 850px;
             margin: 0 auto;
             background: #fff;
-            padding: 20px;
+            padding: 25px;
             border-radius: 8px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border: 1px solid #ddd;
         }
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             border-bottom: 2px solid #2e7d32;
-            padding-bottom: 15px;
-            margin-bottom: 20px;
+            padding-bottom: 12px;
+            margin-bottom: 15px;
         }
         .header-title h2 {
             margin: 0;
             color: #2e7d32;
-            font-size: 18px;
+            font-size: 20px;
         }
         .header-title h4 {
             margin: 5px 0 0 0;
-            color: #555;
-            font-size: 13px;
+            color: #444;
+            font-size: 14px;
         }
         .qr-box {
             width: 110px;
@@ -61,11 +61,34 @@
             height: 100%;
             object-fit: contain;
         }
+
+        /* عنوان الموافقة الرئيسي البارز في المنتصف */
+        .main-approval-title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 800;
+            color: #1b5e20;
+            background-color: #e8f5e9;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #a5d6a7;
+            margin: 15px 0 20px 0;
+            letter-spacing: 0.5px;
+        }
+
+        .section-title {
+            background-color: #f1f8e9;
+            color: #1b5e20;
+            padding: 6px 12px;
+            font-weight: bold;
+            font-size: 14px;
+            border-right: 4px solid #2e7d32;
+            margin: 15px 0 10px 0;
+        }
         .form-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-bottom: 20px;
+            gap: 10px;
         }
         .form-group {
             display: flex;
@@ -76,22 +99,75 @@
         }
         label {
             font-weight: 600;
-            margin-bottom: 4px;
+            margin-bottom: 3px;
             font-size: 12px;
             color: #2e7d32;
         }
-        input {
-            padding: 8px 10px;
+        input, select, textarea {
+            padding: 6px 8px;
             border: 1px solid #ccc;
             border-radius: 4px;
             font-size: 13px;
             width: 100%;
         }
         .read-only-box {
-            background-color: #e8f5e9;
+            background-color: #f1f8e9;
             border: 1px solid #a5d6a7;
             font-weight: bold;
         }
+        
+        .conditions-list {
+            font-size: 12px;
+            line-height: 1.6;
+            padding-right: 20px;
+            margin: 5px 0;
+        }
+        .conditions-list li {
+            margin-bottom: 4px;
+        }
+
+        .signatures-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+            margin-top: 25px;
+            text-align: center;
+        }
+        .sig-box {
+            border: 1px dashed #aaa;
+            padding: 10px;
+            border-radius: 6px;
+            background: #fafafa;
+            min-height: 110px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .sig-title {
+            font-weight: bold;
+            font-size: 13px;
+            color: #1b5e20;
+        }
+        .sig-space {
+            height: 40px;
+        }
+        .stamp-box {
+            border: 2px solid #2e7d32;
+            border-style: double;
+            border-radius: 50%;
+            width: 100px;
+            height: 100px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #2e7d32;
+            font-size: 11px;
+            font-weight: bold;
+            text-align: center;
+            background: #f9fbe7;
+        }
+
         .btn-print {
             background: #2e7d32;
             color: #fff;
@@ -102,66 +178,124 @@
             border-radius: 5px;
             cursor: pointer;
             width: 100%;
-            margin-top: 10px;
+            margin-top: 20px;
         }
+
         @media print {
             body { background: #fff; padding: 0; }
-            .container { box-shadow: none; border: none; width: 100%; max-width: 100%; }
+            .container { box-shadow: none; border: none; width: 100%; max-width: 100%; padding: 0; }
             .btn-print { display: none; }
-            input { border: none; border-bottom: 1px dashed #666; border-radius: 0; background: transparent; }
+            input, select, textarea { border: none; border-bottom: 1px dashed #666; border-radius: 0; background: transparent; }
+            .read-only-box { background: transparent; border: none; border-bottom: 1px dashed #666; }
+            .sig-box { border: 1px solid #ccc; }
         }
     </style>
 </head>
 <body>
 
 <div class="container">
+    <!-- الهيدر والـ QR -->
     <div class="header">
         <div class="header-title">
             <h2>مديرية الشؤون الصحية بالإسكندرية</h2>
-            <h4>وحدة التخلص الآمن - نموذج موافقة بيئية موحد</h4>
+            <h4>إدارة الفحص والترخيص - وحدة التخلص الآمن</h4>
         </div>
         <div class="qr-box" id="qrContainer"></div>
     </div>
 
+    <!-- العنوان المكتوب بخط عريض وبحجم أكبر في منتصف الصفحة أسفل وحدة التخلص الآمن -->
+    <div class="main-approval-title">
+        نموذج موافقة بيئية موحد
+    </div>
+
     <form id="approvalForm">
+        <!-- بيانات المنشأة -->
+        <div class="section-title">أولاً: البيانات الأساسية للمنشأة والمسؤول</div>
         <div class="form-grid">
             <div class="form-group">
-                <label>اسم المنشأة الطبية:</label>
+                <label>اسم المنشأة الطبية / العيادة:</label>
                 <input type="text" id="facilityName" placeholder="أدخل اسم المنشأة" oninput="renderQR()">
             </div>
             <div class="form-group">
-                <label>التخصص / النشاط:</label>
-                <input type="text" id="activityType" placeholder="مثال: عيادة خاصة / مركز طبي" oninput="renderQR()">
+                <label>التخصص / طبيعة النشاط:</label>
+                <input type="text" id="activityType" placeholder="مثال: عيادة خاصة / مركز طب وجراحة" oninput="renderQR()">
             </div>
             <div class="form-group">
-                <label>اسم المدير الفني / المسؤول:</label>
-                <input type="text" id="managerName" placeholder="أدخل الاسم الثلاثي/الرباعي" oninput="renderQR()">
+                <label>اسم المدير الفني / الطبيب المسؤول:</label>
+                <input type="text" id="managerName" placeholder="أدخل الاسم الرباعي" oninput="renderQR()">
             </div>
             <div class="form-group">
-                <label>الرقم القومي للمسؤول:</label>
-                <input type="text" id="nationalId" maxlength="14" placeholder="14 رقم" oninput="renderQR()">
+                <label>الرقم القومي للمسؤول (14 رقم):</label>
+                <input type="text" id="nationalId" maxlength="14" placeholder="أدخل الرقم القومي" oninput="renderQR()">
             </div>
             <div class="form-group full">
                 <label>العنوان التفصيلي للمنشأة:</label>
-                <input type="text" id="address" placeholder="المحافظة - المركز/المدينة - الشارع - رقم العقار" oninput="renderQR()">
+                <input type="text" id="address" placeholder="المحافظة - الحي/المركز - الشارع - رقم العقار - الدور" oninput="renderQR()">
             </div>
             <div class="form-group">
-                <label>تاريخ المعاينة والمعالجة:</label>
+                <label>تاريخ المعاينة والاعتماد:</label>
                 <input type="text" id="date" class="read-only-box" value="17 أكتوبر 2026" readonly>
             </div>
             <div class="form-group">
-                <label>رقم كود التتبع البيئي:</label>
+                <label>رقم كود التتبع البيئي الموحد:</label>
                 <input type="text" id="trackingCode" class="read-only-box" value="ENV-885978" readonly>
             </div>
         </div>
 
-        <button type="button" class="btn-print" onclick="window.print()">🖨️ طباعة الموافقة</button>
+        <!-- الاشتراطات البيئية والصحية -->
+        <div class="section-title">ثانياً: الاشتراطات البيئية والتنظيمية الواجب اتباعها (طبقا للقرار 518 لسنة 2023)</div>
+        <ol class="conditions-list">
+            <li>الالتزام بالتعاقد الساري مع جهة معتمدة للتخلص الآمن من النفايات الطبية الخطرة.</li>
+            <li>توفير حاويات وأكياس حمراء وصفراء سميكة ومطابقة للمواصفات القياسية داخل كافة الغرف والعيادات.</li>
+            <li>تخصيص غرفة/مكان آمن ومغلق للتجميع المؤقت للنفايات الخطرة لحين تسليمها لسيارة التجميع.</li>
+            <li>توفير وسائل الحماية الشخصية (PPE) للعمال والقائمين على تداول النفايات داخل المنشأة.</li>
+            <li>الالتزام بالفصل التام بين النفايات العادية (الصلبة) والنفايات الطبية الخطرة من المصدر.</li>
+        </ol>
+
+        <!-- نتيجة المعاينة الميدانية -->
+        <div class="section-title">ثالثاً: نتيجة المعاينة الميدانية والقرار الفني</div>
+        <div class="form-grid">
+            <div class="form-group">
+                <label>حالة الاستيفاء البيئي:</label>
+                <select id="status">
+                    <option value="مستوفي لكافة الاشتراطات البيئية والصحية">مستوفي لكافة الاشتراطات البيئية</option>
+                    <option value="مستوفي مع إعطاء مهلة للتوفيق">مستوفي مع إعطاء مهلة للتوفيق</option>
+                    <option value="غير مستوفي ومرفوض">غير مستوفي ومرفوض</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>ملاحظات اللجنة الميدانية:</label>
+                <input type="text" id="notes" placeholder="أدخل أي ملاحظات إضافية إن وجدت">
+            </div>
+        </div>
+
+        <!-- التوقيعات والأختام الرسمية -->
+        <div class="section-title">رابعاً: الاعتماد والتوقيعات الرسمية</div>
+        <div class="signatures-grid">
+            <div class="sig-box">
+                <div class="sig-title">مفتش البيئة / عضو اللجنة</div>
+                <div class="sig-space"></div>
+                <div style="font-size: 11px;">الاسم: ........................</div>
+            </div>
+            <div class="sig-box">
+                <div class="sig-title">مدير وحدة التخلص الآمن</div>
+                <div class="sig-space"></div>
+                <div style="font-size: 11px;">الاسم: ........................</div>
+            </div>
+            <div class="sig-box">
+                <div class="sig-title">خاتم الشعار (النسر / الوحدة)</div>
+                <div class="stamp-box">
+                    خاتم الاعتماد<br>الرسمي
+                </div>
+            </div>
+        </div>
+
+        <button type="button" class="btn-print" onclick="window.print()">🖨️ طباعة نموذج الموافقة الموحد</button>
     </form>
 </div>
 
 <script>
     function drawFallbackQR(text) {
-        // توليد QR عبر خدمة تحويل مباشرة وموثوقة كصورة
         const encodedText = encodeURIComponent(text);
         const imgUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodedText}`;
         document.getElementById('qrContainer').innerHTML = `<img src="${imgUrl}" alt="QR Code">`;
